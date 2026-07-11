@@ -73,18 +73,19 @@ router.post('/register', async (req, res) => {
     return;
   }
 
-  const passwordHash = bcrypt.hashSync(password, 12);
+  const passwordHash = await bcrypt.hash(password, 12);
   const result = createUser.run(email, passwordHash, 'user');
   const token = issueToken({ id: Number(result.lastInsertRowid), email, role: 'user' });
   res.status(201).json({ token });
 });
 
-router.post('/login', loginLimiter, (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const email = String(req.body?.email ?? '').trim().toLowerCase();
   const password = String(req.body?.password ?? '');
   const user = findUserByEmail.get(email) as User | undefined;
 
-  if (!user || !bcrypt.compareSync(password, user.password_hash)) {
+  const passwordMatches = user ? await bcrypt.compare(password, user.password_hash) : false;
+  if (!user || !passwordMatches) {
     res.status(401).json({ error: 'Invalid email or password' });
     return;
   }

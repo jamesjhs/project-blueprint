@@ -2,8 +2,11 @@ import 'dotenv/config';
 import pkg from '../package.json';
 
 const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret && process.env.NODE_ENV === 'production') {
-  throw new Error('JWT_SECRET must be set');
+if (!jwtSecret) {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET must be set in production');
+  }
+  console.warn('WARNING: JWT_SECRET not set — using insecure default. Set JWT_SECRET before deploying.');
 }
 
 const port = Number.parseInt(process.env.PORT ?? '<<PORT>>', 10);
@@ -30,7 +33,7 @@ export const APP_VERSION: string = pkg.version;
 export const PORT = port;
 export const NODE_ENV = process.env.NODE_ENV ?? 'development';
 export const BASE_URL = process.env.BASE_URL ?? `http://localhost:${PORT}`;
-export const JWT_SECRET = jwtSecret ?? 'dev-secret-change-before-deploy';
+export const JWT_SECRET = jwtSecret!;
 export const DB_PATH = process.env.DB_PATH ?? './data/app.db';
 export const DB_ENCRYPTION_KEY = asOptional(process.env.DB_ENCRYPTION_KEY);
 export const TURNSTILE_SITE_KEY = asOptional(process.env.TURNSTILE_SITE_KEY);

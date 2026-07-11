@@ -8,6 +8,10 @@ fs.mkdirSync(path.dirname(resolvedPath), { recursive: true });
 
 const db = new Database(resolvedPath);
 if (DB_ENCRYPTION_KEY) {
+  // Validate key contains only safe characters before using in pragma
+  if (!/^[\w .~!@#$%^&*()_+=\-[\]{}|;:,.<>?/]+$/.test(DB_ENCRYPTION_KEY)) {
+    throw new Error('DB_ENCRYPTION_KEY contains invalid characters');
+  }
   const escapedKey = DB_ENCRYPTION_KEY.replace(/'/g, "''");
   db.pragma(`key='${escapedKey}'`);
 }

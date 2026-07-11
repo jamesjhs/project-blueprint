@@ -68,7 +68,7 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  const payload = event.data?.json?.() ?? { title: '<<PROJECT_TITLE>>', body: 'You have a new notification.' };
+  const payload = event.data ? event.data.json() : { title: '<<PROJECT_TITLE>>', body: 'You have a new notification.' };
   const title = payload.title || '<<PROJECT_TITLE>>';
   const options = {
     body: payload.body || 'You have a new notification.',
