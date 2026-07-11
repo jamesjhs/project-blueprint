@@ -1,0 +1,17 @@
+{
+  "name": "project-blueprint",
+  "version": "1.0.0",
+  "description": "Project template scaffolder for jamesjhs projects",
+  "scripts": {
+    "scaffold": "tsx scripts/scaffold.ts",
+    "new": "tsx scripts/scaffold.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.5",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
